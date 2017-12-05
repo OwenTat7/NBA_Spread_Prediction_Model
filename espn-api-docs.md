@@ -6,9 +6,9 @@
 
 **Latest Scores**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard
 
-query params:
-- calendar: 'blacklist'
-- dates: any date in YYYYMMDD
+- query params:
+        - calendar: 'blacklist'
+        - dates: any date in YYYYMMDD
         
 **Team Information**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/:team
 
