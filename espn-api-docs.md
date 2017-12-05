@@ -26,5 +26,10 @@
 - params:
 
    - league: some league abbreviation (EX: 'eng.1' for EPL, 'usa.1' for MLS) 
+   
+**Latest News**: http://site.api.espn.com/apis/site/v2/sports/soccer/:league/news
+
+**List of Team Information**: http://site.api.espn.com/apis/site/v2/sports/soccer/:league/teams
+
 
 Will update with more information as I find more...
