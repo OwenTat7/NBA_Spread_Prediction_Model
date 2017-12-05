@@ -17,7 +17,7 @@
 
 - params:
 
-   - gameId: identifier of some game
+   - gameId: identifier of some game (EX: 400934572 for 2017 Army vs Navy)
         
 **Team Information**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/:team
 
