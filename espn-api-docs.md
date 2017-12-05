@@ -24,53 +24,80 @@
 ### NFL
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/football/nfl/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/:team
+
 
 ## Baseball
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/:team
 
 ## Hockey
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/:team
+
 
 ## Basketball
 
 ### NBA
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/basketball/nba/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/:team
+
 
 ### WNBA
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/basketball/wnba/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/basketball/wnba/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/basketball/wnba/teams/:team
+
 
 ### Women's College Basketball
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/teams/:team
+
 
 ### Men's College Basketball
 
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard
+
 **News**: http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/news
+
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams
+
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/:team
+
 
 
 ## Soccer
