@@ -16,5 +16,15 @@
 - params: 
 
    - team: some team abbreviation (EX: 'all' for Allegheny, 'gt' for Georgia Tech, 'wisconsin' for Wisconsin)
+   
+**Rankings**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings
+
+## Soccer
+
+**Scores**: http://site.api.espn.com/apis/site/v2/sports/soccer/:league/scoreboard
+
+- params:
+
+   - league: some league abbreviation (EX: 'eng.1' for EPL, 'usa.1' for MLS) 
 
 Will update with more information as I find more...
