@@ -10,7 +10,6 @@
         - dates: any date in YYYYMMDD
         
 **Team Information**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/:team
-
     - params: 
     
         - team: some team abbreviation (EX: 'all' for Allegheny, 'gt' for Georgia Tech, 'wisconsin' for Wisconsin)
