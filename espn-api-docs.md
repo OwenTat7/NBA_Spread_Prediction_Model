@@ -12,6 +12,12 @@
 
    - calendar: 'blacklist'
    - dates: any date in YYYYMMDD
+   
+**Game Information**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=:gameId
+
+- params:
+
+   - gameId: identifier of some game
         
 **Team Information**: http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/:team
 
