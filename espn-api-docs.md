@@ -40,6 +40,8 @@
 
 ## Baseball
 
+### MLB
+
 **Scores**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard
 
 **News**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/news
@@ -47,6 +49,9 @@
 **All Teams**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams
 
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/:team
+
+### College Baseball (may be NCAA tournament only)
+**Specific Game (using gameId)**: https://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/summary?event=:gameId
 
 ## Hockey
 
