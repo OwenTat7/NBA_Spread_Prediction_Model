@@ -50,8 +50,9 @@
 
 **Specific Team**: http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/:team
 
-### College Baseball (may be NCAA tournament only)
-**Specific Game (using gameId)**: https://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/summary?event=:gameId
+### College Baseball
+
+**Scores**: https://site.api.espn.com/apis/site/v2/sports/baseball/college-baseball/scoreboard
 
 ## Hockey
 
