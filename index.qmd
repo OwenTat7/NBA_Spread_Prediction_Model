@@ -17,6 +17,14 @@ format:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
+<div style="text-align: center; margin-bottom: 30px; padding: 15px; background-color: #f6f8fa; border-radius: 5px; border: 1px solid #e1e4e8;">
+  <a href="https://github.com/YOUR_USERNAME/NBA_Prediction_Model" target="_blank" style="text-decoration: none; color: #0366d6; font-size: 18px;">
+    <strong>📦 View Project on GitHub</strong>
+  </a>
+  <br>
+  <small style="color: #586069;">Replace YOUR_USERNAME with your GitHub username</small>
+</div>
+
 # Executive Summary
 
 This report documents the development of an NBA spread prediction model using machine learning techniques. The model predicts game residuals (actual margin - closing spread) to determine which team will cover the spread. Through iterative improvements, we achieved **61.9% test accuracy** with good generalization and balanced predictions.
