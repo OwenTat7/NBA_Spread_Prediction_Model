@@ -18,11 +18,11 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 <div style="text-align: center; margin-bottom: 30px; padding: 15px; background-color: #f6f8fa; border-radius: 5px; border: 1px solid #e1e4e8;">
-  <a href="https://github.com/YOUR_USERNAME/NBA_Prediction_Model" target="_blank" style="text-decoration: none; color: #0366d6; font-size: 18px;">
+  <a href="https://github.com/OwenTat7/NBA_Spread_Prediction_Model" target="_blank" style="text-decoration: none; color: #0366d6; font-size: 18px;">
     <strong>📦 View Project on GitHub</strong>
   </a>
   <br>
-  <small style="color: #586069;">https://github.com/OwenTat7/NBA_Prediction_Model</small>
+  <small style="color: #586069;">https://github.com/OwenTat7/NBA_Spread_Prediction_Model</small>
 </div>
 
 # Executive Summary
