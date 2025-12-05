@@ -1,0 +1,86 @@
+NBA Spread Prediction Model - Project Structure
+===============================================
+
+📁 ROOT DIRECTORY
+├── README.md                          ⭐ Main project README
+├── PROJECT_STRUCTURE.txt              This file
+│
+├── 📂 data/                           Data files
+│   ├── nba_games.csv                  ⭐ Main dataset (3,160 games)
+│   ├── nba_games_with_injuries.csv    Dataset with injury features
+│   ├── nba_games_test.csv             Test dataset
+│   └── *_temp.csv, *_sample.csv       Temporary files
+│
+├── 📂 docs/                           Documentation
+│   ├── README.md                      Detailed docs
+│   ├── QUICK_START.md                 ⭐ Getting started guide
+│   ├── NAVIGATION_GUIDE.md            ⭐ File navigation guide
+│   ├── INJURY_FEATURE_ANALYSIS_SUMMARY.md  ⭐ Key findings
+│   ├── ACCURACY_REPORT.md             Performance metrics
+│   ├── PERFORMANCE_COMPARISON.md      With vs without injuries
+│   ├── INJURY_MODEL_RESULTS.md        Results with injuries
+│   ├── CORRELATION_TEST_RESULTS.md    Multicollinearity analysis
+│   ├── INJURY_INTEGRATION_GUIDE.md    Technical implementation
+│   ├── INJURY_FEATURES_SUMMARY.md     Feature descriptions
+│   ├── MODEL_READINESS_TIMELINE.md    Development timeline
+│   ├── STATUS.md, PROGRESS.md         Status updates
+│   ├── FINAL_STATUS.md                Current status
+│   └── espn-api-docs.md               API documentation
+│
+├── 📂 scripts/                        Python scripts
+│   ├── run_full_pipeline.py           ⭐ Main pipeline (USE THIS!)
+│   ├── analyze_injury_features.py     Injury feature analysis
+│   ├── fetch_historical_data.py       Data collection
+│   ├── test_prediction_pipeline.py    Pipeline testing
+│   ├── add_injuries_to_pipeline.py    Add injury features
+│   ├── add_injuries_background.py     Background collection
+│   ├── collect_injuries_background.py Batch collection
+│   ├── injury_features.py             Injury feature module
+│   └── fetch_historical_data_test.py  Test collection
+│
+├── 📂 notebooks/                      Jupyter notebooks
+│   ├── nba_spread_prediction.ipynb    ⭐ Main prediction notebook
+│   └── nba_data_collection.ipynb      Data collection notebook
+│
+├── 📂 logs/                           Log files
+│   ├── fetch_log.txt                  Data fetch logs
+│   ├── injury_collection.log          Injury collection logs
+│   └── TIMELINE_SUMMARY.txt           Timeline summary
+│
+└── 📂 models/                         Saved models
+    └── (Generated when pipeline runs)
+
+QUICK ACCESS
+============
+
+🚀 To run the model:
+   python scripts/run_full_pipeline.py
+
+📊 To see results:
+   docs/INJURY_FEATURE_ANALYSIS_SUMMARY.md
+
+📖 To get started:
+   docs/QUICK_START.md
+
+🗺️ To navigate files:
+   docs/NAVIGATION_GUIDE.md
+
+KEY FILES
+=========
+
+⭐ = Most important files
+
+Data:
+  - data/nba_games.csv (main dataset)
+
+Scripts:
+  - scripts/run_full_pipeline.py (main pipeline)
+
+Docs:
+  - README.md (overview)
+  - docs/INJURY_FEATURE_ANALYSIS_SUMMARY.md (key findings)
+  - docs/NAVIGATION_GUIDE.md (file navigation)
+
+Notebooks:
+  - notebooks/nba_spread_prediction.ipynb (main notebook)
+

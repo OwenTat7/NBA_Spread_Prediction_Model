@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.21">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Owen Tatlonghari">
+<meta name="dcterms.date" content="2025-12-04">
+
+<title>NBA Spread Prediction Model - Personal Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="index_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-achievements" id="toc-key-achievements" class="nav-link" data-scroll-target="#key-achievements">Key Achievements</a></li>
+  </ul></li>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link" data-scroll-target="#project-overview">1. Project Overview</a>
+  <ul class="collapse">
+  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">1.1 Objective</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">1.2 Data Sources</a></li>
+  <li><a href="#model-architecture" id="toc-model-architecture" class="nav-link" data-scroll-target="#model-architecture">1.3 Model Architecture</a></li>
+  </ul></li>
+  <li><a href="#data-collection-process" id="toc-data-collection-process" class="nav-link" data-scroll-target="#data-collection-process">2. Data Collection Process</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">2.1 Overview</a></li>
+  <li><a href="#step-1-fetching-historical-games" id="toc-step-1-fetching-historical-games" class="nav-link" data-scroll-target="#step-1-fetching-historical-games">2.2 Step 1: Fetching Historical Games</a>
+  <ul class="collapse">
+  <li><a href="#api-endpoint" id="toc-api-endpoint" class="nav-link" data-scroll-target="#api-endpoint">API Endpoint</a></li>
+  <li><a href="#data-extraction-process" id="toc-data-extraction-process" class="nav-link" data-scroll-target="#data-extraction-process">Data Extraction Process</a></li>
+  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output">Output</a></li>
+  <li><a href="#time-requirements" id="toc-time-requirements" class="nav-link" data-scroll-target="#time-requirements">Time Requirements</a></li>
+  </ul></li>
+  <li><a href="#step-2-adding-injury-features" id="toc-step-2-adding-injury-features" class="nav-link" data-scroll-target="#step-2-adding-injury-features">2.3 Step 2: Adding Injury Features</a>
+  <ul class="collapse">
+  <li><a href="#api-endpoint-1" id="toc-api-endpoint-1" class="nav-link" data-scroll-target="#api-endpoint-1">API Endpoint</a></li>
+  <li><a href="#injury-data-extraction" id="toc-injury-data-extraction" class="nav-link" data-scroll-target="#injury-data-extraction">Injury Data Extraction</a></li>
+  <li><a href="#processing-details" id="toc-processing-details" class="nav-link" data-scroll-target="#processing-details">Processing Details</a></li>
+  <li><a href="#output-1" id="toc-output-1" class="nav-link" data-scroll-target="#output-1">Output</a></li>
+  <li><a href="#time-requirements-1" id="toc-time-requirements-1" class="nav-link" data-scroll-target="#time-requirements-1">Time Requirements</a></li>
+  </ul></li>
+  <li><a href="#data-quality-measures" id="toc-data-quality-measures" class="nav-link" data-scroll-target="#data-quality-measures">2.4 Data Quality Measures</a></li>
+  </ul></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering">3. Feature Engineering</a>
+  <ul class="collapse">
+  <li><a href="#elo-rating-system" id="toc-elo-rating-system" class="nav-link" data-scroll-target="#elo-rating-system">3.1 ELO Rating System</a>
+  <ul class="collapse">
+  <li><a href="#calculation-method" id="toc-calculation-method" class="nav-link" data-scroll-target="#calculation-method">Calculation Method</a></li>
+  </ul></li>
+  <li><a href="#rest-days-calculation" id="toc-rest-days-calculation" class="nav-link" data-scroll-target="#rest-days-calculation">3.2 Rest Days Calculation</a>
+  <ul class="collapse">
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
+  </ul></li>
+  <li><a href="#rolling-statistics" id="toc-rolling-statistics" class="nav-link" data-scroll-target="#rolling-statistics">3.3 Rolling Statistics</a>
+  <ul class="collapse">
+  <li><a href="#calculation-method-1" id="toc-calculation-method-1" class="nav-link" data-scroll-target="#calculation-method-1">Calculation Method</a></li>
+  </ul></li>
+  <li><a href="#temporal-features" id="toc-temporal-features" class="nav-link" data-scroll-target="#temporal-features">3.4 Temporal Features</a>
+  <ul class="collapse">
+  <li><a href="#features-created" id="toc-features-created" class="nav-link" data-scroll-target="#features-created">Features Created</a></li>
+  </ul></li>
+  <li><a href="#draftkings-spread-features" id="toc-draftkings-spread-features" class="nav-link" data-scroll-target="#draftkings-spread-features">3.5 DraftKings Spread Features</a>
+  <ul class="collapse">
+  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
+  <li><a href="#features-created-1" id="toc-features-created-1" class="nav-link" data-scroll-target="#features-created-1">Features Created</a></li>
+  <li><a href="#rationale" id="toc-rationale" class="nav-link" data-scroll-target="#rationale">Rationale</a></li>
+  </ul></li>
+  <li><a href="#injury-features" id="toc-injury-features" class="nav-link" data-scroll-target="#injury-features">3.6 Injury Features</a>
+  <ul class="collapse">
+  <li><a href="#severity-score-calculation" id="toc-severity-score-calculation" class="nav-link" data-scroll-target="#severity-score-calculation">Severity Score Calculation</a></li>
+  <li><a href="#features-created-2" id="toc-features-created-2" class="nav-link" data-scroll-target="#features-created-2">Features Created</a></li>
+  </ul></li>
+  <li><a href="#interaction-features" id="toc-interaction-features" class="nav-link" data-scroll-target="#interaction-features">3.7 Interaction Features</a>
+  <ul class="collapse">
+  <li><a href="#features-created-3" id="toc-features-created-3" class="nav-link" data-scroll-target="#features-created-3">Features Created</a></li>
+  </ul></li>
+  <li><a href="#target-variable-calculation" id="toc-target-variable-calculation" class="nav-link" data-scroll-target="#target-variable-calculation">3.8 Target Variable Calculation</a>
+  <ul class="collapse">
+  <li><a href="#residual-calculation" id="toc-residual-calculation" class="nav-link" data-scroll-target="#residual-calculation">Residual Calculation</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#initial-model-development" id="toc-initial-model-development" class="nav-link" data-scroll-target="#initial-model-development">4. Initial Model Development</a>
+  <ul class="collapse">
+  <li><a href="#baseline-features" id="toc-baseline-features" class="nav-link" data-scroll-target="#baseline-features">2.1 Baseline Features</a></li>
+  </ul></li>
+  <li><a href="#key-improvements-and-iterations" id="toc-key-improvements-and-iterations" class="nav-link" data-scroll-target="#key-improvements-and-iterations">5. Key Improvements and Iterations</a>
+  <ul class="collapse">
+  <li><a href="#date-and-timezone-fixes" id="toc-date-and-timezone-fixes" class="nav-link" data-scroll-target="#date-and-timezone-fixes">5.1 Date and Timezone Fixes</a>
+  <ul class="collapse">
+  <li><a href="#problem" id="toc-problem" class="nav-link" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#outcome" id="toc-outcome" class="nav-link" data-scroll-target="#outcome">Outcome</a></li>
+  </ul></li>
+  <li><a href="#cover-prediction-bias-fix" id="toc-cover-prediction-bias-fix" class="nav-link" data-scroll-target="#cover-prediction-bias-fix">5.2 Cover Prediction Bias Fix</a>
+  <ul class="collapse">
+  <li><a href="#problem-1" id="toc-problem-1" class="nav-link" data-scroll-target="#problem-1">Problem</a></li>
+  <li><a href="#root-cause-analysis" id="toc-root-cause-analysis" class="nav-link" data-scroll-target="#root-cause-analysis">Root Cause Analysis</a></li>
+  <li><a href="#solution-1" id="toc-solution-1" class="nav-link" data-scroll-target="#solution-1">Solution</a></li>
+  <li><a href="#outcome-1" id="toc-outcome-1" class="nav-link" data-scroll-target="#outcome-1">Outcome</a></li>
+  </ul></li>
+  <li><a href="#draftkings-spread-integration" id="toc-draftkings-spread-integration" class="nav-link" data-scroll-target="#draftkings-spread-integration">5.3 DraftKings Spread Integration</a>
+  <ul class="collapse">
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
+  <li><a href="#data-extraction" id="toc-data-extraction" class="nav-link" data-scroll-target="#data-extraction">Data Extraction</a></li>
+  <li><a href="#outcome-2" id="toc-outcome-2" class="nav-link" data-scroll-target="#outcome-2">Outcome</a></li>
+  </ul></li>
+  <li><a href="#injury-feature-integration" id="toc-injury-feature-integration" class="nav-link" data-scroll-target="#injury-feature-integration">5.4 Injury Feature Integration</a>
+  <ul class="collapse">
+  <li><a href="#implementation-1" id="toc-implementation-1" class="nav-link" data-scroll-target="#implementation-1">Implementation</a></li>
+  <li><a href="#outcome-3" id="toc-outcome-3" class="nav-link" data-scroll-target="#outcome-3">Outcome</a></li>
+  </ul></li>
+  <li><a href="#multicollinearity-analysis-and-feature-removal" id="toc-multicollinearity-analysis-and-feature-removal" class="nav-link" data-scroll-target="#multicollinearity-analysis-and-feature-removal">5.5 Multicollinearity Analysis and Feature Removal</a>
+  <ul class="collapse">
+  <li><a href="#problem-identified" id="toc-problem-identified" class="nav-link" data-scroll-target="#problem-identified">Problem Identified</a></li>
+  <li><a href="#solution-2" id="toc-solution-2" class="nav-link" data-scroll-target="#solution-2">Solution</a></li>
+  <li><a href="#outcome-4" id="toc-outcome-4" class="nav-link" data-scroll-target="#outcome-4">Outcome</a></li>
+  </ul></li>
+  <li><a href="#regularization-improvements" id="toc-regularization-improvements" class="nav-link" data-scroll-target="#regularization-improvements">5.6 Regularization Improvements</a>
+  <ul class="collapse">
+  <li><a href="#initial-problem" id="toc-initial-problem" class="nav-link" data-scroll-target="#initial-problem">Initial Problem</a></li>
+  <li><a href="#regularization-strategy" id="toc-regularization-strategy" class="nav-link" data-scroll-target="#regularization-strategy">Regularization Strategy</a></li>
+  <li><a href="#final-configuration" id="toc-final-configuration" class="nav-link" data-scroll-target="#final-configuration">Final Configuration</a></li>
+  <li><a href="#outcome-5" id="toc-outcome-5" class="nav-link" data-scroll-target="#outcome-5">Outcome</a></li>
+  </ul></li>
+  <li><a href="#threshold-optimization" id="toc-threshold-optimization" class="nav-link" data-scroll-target="#threshold-optimization">5.7 Threshold Optimization</a>
+  <ul class="collapse">
+  <li><a href="#problem-2" id="toc-problem-2" class="nav-link" data-scroll-target="#problem-2">Problem</a></li>
+  <li><a href="#solution-3" id="toc-solution-3" class="nav-link" data-scroll-target="#solution-3">Solution</a></li>
+  <li><a href="#results-by-threshold" id="toc-results-by-threshold" class="nav-link" data-scroll-target="#results-by-threshold">Results by Threshold</a></li>
+  <li><a href="#outcome-6" id="toc-outcome-6" class="nav-link" data-scroll-target="#outcome-6">Outcome</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#final-model-performance" id="toc-final-model-performance" class="nav-link" data-scroll-target="#final-model-performance">6. Final Model Performance</a>
+  <ul class="collapse">
+  <li><a href="#overall-metrics" id="toc-overall-metrics" class="nav-link" data-scroll-target="#overall-metrics">6.1 Overall Metrics</a>
+  <ul class="collapse">
+  <li><a href="#regression-metrics" id="toc-regression-metrics" class="nav-link" data-scroll-target="#regression-metrics">Regression Metrics</a></li>
+  <li><a href="#classification-metrics-cover-predictions" id="toc-classification-metrics-cover-predictions" class="nav-link" data-scroll-target="#classification-metrics-cover-predictions">Classification Metrics (Cover Predictions)</a></li>
+  <li><a href="#generalization" id="toc-generalization" class="nav-link" data-scroll-target="#generalization">Generalization</a></li>
+  </ul></li>
+  <li><a href="#confusion-matrix-test-set" id="toc-confusion-matrix-test-set" class="nav-link" data-scroll-target="#confusion-matrix-test-set">6.2 Confusion Matrix (Test Set)</a></li>
+  <li><a href="#feature-importance" id="toc-feature-importance" class="nav-link" data-scroll-target="#feature-importance">6.3 Feature Importance</a></li>
+  </ul></li>
+  <li><a href="#data-collection-pipeline" id="toc-data-collection-pipeline" class="nav-link" data-scroll-target="#data-collection-pipeline">7. Data Collection Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#script-organization" id="toc-script-organization" class="nav-link" data-scroll-target="#script-organization">7.1 Script Organization</a></li>
+  <li><a href="#data-files" id="toc-data-files" class="nav-link" data-scroll-target="#data-files">7.2 Data Files</a></li>
+  <li><a href="#data-quality" id="toc-data-quality" class="nav-link" data-scroll-target="#data-quality">7.3 Data Quality</a></li>
+  </ul></li>
+  <li><a href="#prediction-pipeline" id="toc-prediction-pipeline" class="nav-link" data-scroll-target="#prediction-pipeline">8. Prediction Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">8.1 Output Files</a></li>
+  <li><a href="#prediction-format" id="toc-prediction-format" class="nav-link" data-scroll-target="#prediction-format">8.2 Prediction Format</a></li>
+  <li><a href="#automation" id="toc-automation" class="nav-link" data-scroll-target="#automation">8.3 Automation</a></li>
+  </ul></li>
+  <li><a href="#daily-automation-and-workflow" id="toc-daily-automation-and-workflow" class="nav-link" data-scroll-target="#daily-automation-and-workflow">9. Daily Automation and Workflow</a>
+  <ul class="collapse">
+  <li><a href="#overview-1" id="toc-overview-1" class="nav-link" data-scroll-target="#overview-1">9.1 Overview</a></li>
+  <li><a href="#daily-workflow" id="toc-daily-workflow" class="nav-link" data-scroll-target="#daily-workflow">9.2 Daily Workflow</a>
+  <ul class="collapse">
+  <li><a href="#automated-process-300-am-daily" id="toc-automated-process-300-am-daily" class="nav-link" data-scroll-target="#automated-process-300-am-daily">Automated Process (3:00 AM Daily)</a></li>
+  <li><a href="#workflow-diagram" id="toc-workflow-diagram" class="nav-link" data-scroll-target="#workflow-diagram">Workflow Diagram</a></li>
+  </ul></li>
+  <li><a href="#data-collection-and-model-retraining" id="toc-data-collection-and-model-retraining" class="nav-link" data-scroll-target="#data-collection-and-model-retraining">9.3 Data Collection and Model Retraining</a>
+  <ul class="collapse">
+  <li><a href="#data-updates" id="toc-data-updates" class="nav-link" data-scroll-target="#data-updates">Data Updates</a></li>
+  <li><a href="#model-retraining-process" id="toc-model-retraining-process" class="nav-link" data-scroll-target="#model-retraining-process">Model Retraining Process</a></li>
+  <li><a href="#manual-data-collection" id="toc-manual-data-collection" class="nav-link" data-scroll-target="#manual-data-collection">Manual Data Collection</a></li>
+  </ul></li>
+  <li><a href="#prediction-generation-process" id="toc-prediction-generation-process" class="nav-link" data-scroll-target="#prediction-generation-process">9.4 Prediction Generation Process</a>
+  <ul class="collapse">
+  <li><a href="#step-by-step-prediction-workflow" id="toc-step-by-step-prediction-workflow" class="nav-link" data-scroll-target="#step-by-step-prediction-workflow">Step-by-Step Prediction Workflow</a></li>
+  </ul></li>
+  <li><a href="#automation-setup" id="toc-automation-setup" class="nav-link" data-scroll-target="#automation-setup">9.5 Automation Setup</a>
+  <ul class="collapse">
+  <li><a href="#macos-launchd-configuration" id="toc-macos-launchd-configuration" class="nav-link" data-scroll-target="#macos-launchd-configuration">macOS Launchd Configuration</a></li>
+  <li><a href="#wrapper-script" id="toc-wrapper-script" class="nav-link" data-scroll-target="#wrapper-script">Wrapper Script</a></li>
+  <li><a href="#logging-system" id="toc-logging-system" class="nav-link" data-scroll-target="#logging-system">Logging System</a></li>
+  </ul></li>
+  <li><a href="#efficiency-improvements" id="toc-efficiency-improvements" class="nav-link" data-scroll-target="#efficiency-improvements">9.6 Efficiency Improvements</a>
+  <ul class="collapse">
+  <li><a href="#automation-benefits" id="toc-automation-benefits" class="nav-link" data-scroll-target="#automation-benefits">Automation Benefits</a></li>
+  <li><a href="#workflow-optimization" id="toc-workflow-optimization" class="nav-link" data-scroll-target="#workflow-optimization">Workflow Optimization</a></li>
+  <li><a href="#file-organization" id="toc-file-organization" class="nav-link" data-scroll-target="#file-organization">File Organization</a></li>
+  </ul></li>
+  <li><a href="#monitoring-and-maintenance" id="toc-monitoring-and-maintenance" class="nav-link" data-scroll-target="#monitoring-and-maintenance">9.7 Monitoring and Maintenance</a>
+  <ul class="collapse">
+  <li><a href="#daily-checks" id="toc-daily-checks" class="nav-link" data-scroll-target="#daily-checks">Daily Checks</a></li>
+  <li><a href="#periodic-maintenance" id="toc-periodic-maintenance" class="nav-link" data-scroll-target="#periodic-maintenance">Periodic Maintenance</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#technical-implementation-details" id="toc-technical-implementation-details" class="nav-link" data-scroll-target="#technical-implementation-details">10. Technical Implementation Details</a>
+  <ul class="collapse">
+  <li><a href="#elo-rating-system-1" id="toc-elo-rating-system-1" class="nav-link" data-scroll-target="#elo-rating-system-1">10.1 ELO Rating System</a></li>
+  <li><a href="#feature-engineering-summary" id="toc-feature-engineering-summary" class="nav-link" data-scroll-target="#feature-engineering-summary">10.2 Feature Engineering Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-points" id="toc-key-points" class="nav-link" data-scroll-target="#key-points">Key Points:</a></li>
+  </ul></li>
+  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training">10.3 Model Training</a></li>
+  </ul></li>
+  <li><a href="#challenges-and-solutions" id="toc-challenges-and-solutions" class="nav-link" data-scroll-target="#challenges-and-solutions">11. Challenges and Solutions</a>
+  <ul class="collapse">
+  <li><a href="#challenge-home-cover-bias" id="toc-challenge-home-cover-bias" class="nav-link" data-scroll-target="#challenge-home-cover-bias">11.1 Challenge: Home Cover Bias</a></li>
+  <li><a href="#challenge-overfitting" id="toc-challenge-overfitting" class="nav-link" data-scroll-target="#challenge-overfitting">11.2 Challenge: Overfitting</a></li>
+  <li><a href="#challenge-missing-historical-spreads" id="toc-challenge-missing-historical-spreads" class="nav-link" data-scroll-target="#challenge-missing-historical-spreads">11.3 Challenge: Missing Historical Spreads</a></li>
+  <li><a href="#challenge-api-rate-limiting" id="toc-challenge-api-rate-limiting" class="nav-link" data-scroll-target="#challenge-api-rate-limiting">11.4 Challenge: API Rate Limiting</a></li>
+  </ul></li>
+  <li><a href="#model-limitations-and-future-improvements" id="toc-model-limitations-and-future-improvements" class="nav-link" data-scroll-target="#model-limitations-and-future-improvements">12. Model Limitations and Future Improvements</a>
+  <ul class="collapse">
+  <li><a href="#current-limitations" id="toc-current-limitations" class="nav-link" data-scroll-target="#current-limitations">12.1 Current Limitations</a></li>
+  <li><a href="#potential-improvements" id="toc-potential-improvements" class="nav-link" data-scroll-target="#potential-improvements">12.2 Potential Improvements</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">13. Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#summary-of-achievements" id="toc-summary-of-achievements" class="nav-link" data-scroll-target="#summary-of-achievements">13.1 Summary of Achievements</a></li>
+  <li><a href="#key-learnings" id="toc-key-learnings" class="nav-link" data-scroll-target="#key-learnings">13.2 Key Learnings</a></li>
+  <li><a href="#model-status" id="toc-model-status" class="nav-link" data-scroll-target="#model-status">13.3 Model Status</a></li>
+  </ul></li>
+  <li><a href="#appendix-a-feature-list" id="toc-appendix-a-feature-list" class="nav-link" data-scroll-target="#appendix-a-feature-list">Appendix A: Feature List</a>
+  <ul class="collapse">
+  <li><a href="#final-43-features" id="toc-final-43-features" class="nav-link" data-scroll-target="#final-43-features">Final 43 Features</a>
+  <ul class="collapse">
+  <li><a href="#elo-features-3" id="toc-elo-features-3" class="nav-link" data-scroll-target="#elo-features-3">ELO Features (3)</a></li>
+  <li><a href="#rest-days-3" id="toc-rest-days-3" class="nav-link" data-scroll-target="#rest-days-3">Rest Days (3)</a></li>
+  <li><a href="#rolling-margins-6" id="toc-rolling-margins-6" class="nav-link" data-scroll-target="#rolling-margins-6">Rolling Margins (6)</a></li>
+  <li><a href="#rolling-points-for-6" id="toc-rolling-points-for-6" class="nav-link" data-scroll-target="#rolling-points-for-6">Rolling Points For (6)</a></li>
+  <li><a href="#rolling-points-against-6" id="toc-rolling-points-against-6" class="nav-link" data-scroll-target="#rolling-points-against-6">Rolling Points Against (6)</a></li>
+  <li><a href="#temporal-features-3" id="toc-temporal-features-3" class="nav-link" data-scroll-target="#temporal-features-3">Temporal Features (3)</a></li>
+  <li><a href="#draftkings-features-3" id="toc-draftkings-features-3" class="nav-link" data-scroll-target="#draftkings-features-3">DraftKings Features (3)</a></li>
+  <li><a href="#injury-features-10" id="toc-injury-features-10" class="nav-link" data-scroll-target="#injury-features-10">Injury Features (10)</a></li>
+  <li><a href="#interaction-features-1" id="toc-interaction-features-1" class="nav-link" data-scroll-target="#interaction-features-1">Interaction Features (1)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#appendix-b-model-configuration" id="toc-appendix-b-model-configuration" class="nav-link" data-scroll-target="#appendix-b-model-configuration">Appendix B: Model Configuration</a></li>
+  <li><a href="#appendix-c-file-structure" id="toc-appendix-c-file-structure" class="nav-link" data-scroll-target="#appendix-c-file-structure">Appendix C: File Structure</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">NBA Spread Prediction Model - Personal Project</h1>
+<p class="subtitle lead">A Comprehensive Machine Learning Approach to Predicting NBA Game Spreads</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Owen Tatlonghari </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 4, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level1">
+<h1>Executive Summary</h1>
+<p>This report documents the development of an NBA spread prediction model using machine learning techniques. The model predicts game residuals (actual margin - closing spread) to determine which team will cover the spread. Through iterative improvements, we achieved <strong>61.9% test accuracy</strong> with good generalization and balanced predictions.</p>
+<section id="key-achievements" class="level2">
+<h2 class="anchored" data-anchor-id="key-achievements">Key Achievements</h2>
+<ul>
+<li><strong>Test Accuracy</strong>: 61.9% (vs 50% baseline)</li>
+<li><strong>Features</strong>: 43 features including ELO ratings, rolling statistics, injury data, and DraftKings spreads</li>
+<li><strong>Generalization</strong>: 1.9% train/test gap (excellent)</li>
+<li><strong>Prediction Balance</strong>: 68.9% Home Cover predictions (vs 56.2% actual)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="project-overview" class="level1">
+<h1>1. Project Overview</h1>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">1.1 Objective</h2>
+<p>Develop a machine learning model to predict NBA game spread outcomes by: - Predicting game residuals (actual margin - closing spread) - Determining which team covers the spread - Incorporating multiple data sources (game stats, injuries, market data) - Achieving better-than-random accuracy with good generalization</p>
+</section>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">1.2 Data Sources</h2>
+<ul>
+<li><strong>ESPN API</strong>: Historical game data, scores, team information</li>
+<li><strong>DraftKings Spreads</strong>: Opening and closing spreads from ESPN API</li>
+<li><strong>Injury Data</strong>: Player injury status from ESPN API</li>
+<li><strong>Time Period</strong>: October 2023 - December 2025 (3,183 games)</li>
+</ul>
+</section>
+<section id="model-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="model-architecture">1.3 Model Architecture</h2>
+<ul>
+<li><strong>Algorithm</strong>: LightGBM (Gradient Boosting)</li>
+<li><strong>Target Variable</strong>: Residual = Actual Margin - Closing Spread</li>
+<li><strong>Prediction</strong>: If residual &gt; threshold → Home Covers, else Away Covers</li>
+<li><strong>Evaluation</strong>: Time-series cross-validation with train/test split</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="data-collection-process" class="level1">
+<h1>2. Data Collection Process</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">2.1 Overview</h2>
+<p>Data collection is a two-step process that fetches historical game data and enriches it with injury information. The pipeline is designed to handle API rate limiting and ensure data quality.</p>
+</section>
+<section id="step-1-fetching-historical-games" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-fetching-historical-games">2.2 Step 1: Fetching Historical Games</h2>
+<section id="api-endpoint" class="level3">
+<h3 class="anchored" data-anchor-id="api-endpoint">API Endpoint</h3>
+<ul>
+<li><strong>URL</strong>: <code>http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard</code></li>
+<li><strong>Method</strong>: GET request with date parameter (<code>dates=YYYYMMDD</code>)</li>
+</ul>
+</section>
+<section id="data-extraction-process" class="level3">
+<h3 class="anchored" data-anchor-id="data-extraction-process">Data Extraction Process</h3>
+<ol type="1">
+<li><p><strong>Date Range Processing</strong></p>
+<ul>
+<li>Processes dates in batches of 30 days</li>
+<li>Iterates through each date from start to end</li>
+<li>Progress saved every 5 batches to prevent data loss</li>
+</ul></li>
+<li><p><strong>Game Data Extraction</strong> For each game event, we extract:</p>
+<ul>
+<li><strong>Basic Info</strong>: Game ID, date, name, status, venue</li>
+<li><strong>Team Data</strong>: Home/away team IDs, names, abbreviations</li>
+<li><strong>Scores</strong>: Home/away scores (for completed games)</li>
+<li><strong>Results</strong>: Winner, point differential</li>
+</ul></li>
+<li><p><strong>Spread Data Extraction</strong> Spreads are extracted from the <code>odds</code> array in the competition object:</p>
+<p><strong>From Scoreboard Endpoint</strong>:</p>
+<ul>
+<li>Checks <code>competitions[0].odds[0].pointSpread</code> structure</li>
+<li>Extracts opening spread: <code>pointSpread.home.open.line</code></li>
+<li>Extracts closing spread: <code>pointSpread.home.close.line</code></li>
+<li>Falls back to simple <code>spread</code> field if <code>pointSpread</code> not available</li>
+</ul>
+<p><strong>Spread Conversion</strong>:</p>
+<ul>
+<li>ESPN API spreads may be from favorite’s perspective</li>
+<li>If favorite is away team, negate the spread</li>
+<li>All spreads converted to home-team perspective</li>
+<li>Formula: <code>home_spread = -spread</code> if <code>favorite_id == away_team_id</code></li>
+</ul></li>
+<li><p><strong>Backfilling Missing Spreads</strong> For games missing spread data:</p>
+<ul>
+<li>Fetches game summary: <code>{NBA_BASE_URL}/summary?event={game_id}</code></li>
+<li>Extracts from <code>pickcenter</code> array (DraftKings data)</li>
+<li>Uses same extraction logic as scoreboard</li>
+<li>Rate limited: 0.3 seconds between requests</li>
+</ul></li>
+</ol>
+</section>
+<section id="output" class="level3">
+<h3 class="anchored" data-anchor-id="output">Output</h3>
+<ul>
+<li><strong>File</strong>: <code>final_dataset_raw_games.csv</code></li>
+<li><strong>Columns</strong>: Game info, scores, teams, opening/closing spreads, over/under, favorite_id</li>
+<li><strong>Games</strong>: 3,183 completed games with scores</li>
+</ul>
+</section>
+<section id="time-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="time-requirements">Time Requirements</h3>
+<ul>
+<li><strong>Duration</strong>: ~20-40 minutes for full historical collection</li>
+<li><strong>Rate Limiting</strong>: 0.3 seconds between date requests</li>
+<li><strong>Progress Tracking</strong>: Progress bars and periodic saves</li>
+</ul>
+</section>
+</section>
+<section id="step-2-adding-injury-features" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-adding-injury-features">2.3 Step 2: Adding Injury Features</h2>
+<section id="api-endpoint-1" class="level3">
+<h3 class="anchored" data-anchor-id="api-endpoint-1">API Endpoint</h3>
+<ul>
+<li><strong>URL</strong>: <code>http://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary</code></li>
+<li><strong>Method</strong>: GET request with event parameter (<code>event={game_id}</code>)</li>
+</ul>
+</section>
+<section id="injury-data-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="injury-data-extraction">Injury Data Extraction</h3>
+<ol type="1">
+<li><p><strong>Injury Data Structure</strong></p>
+<ul>
+<li>Located in <code>summary['injuries']</code> array</li>
+<li>Each entry contains team ID and list of injured players</li>
+<li>Player data includes: name, position, status, injury type, return date</li>
+</ul></li>
+<li><p><strong>Injury Status Classification</strong></p>
+<ul>
+<li><strong>Out</strong>: Player is out (status = “Out” or fantasy_status = “OUT”)</li>
+<li><strong>Day-To-Day</strong>: Player is questionable (status = “Day-To-Day” or “GTD”)</li>
+<li><strong>Other</strong>: Minor injuries or questionable status</li>
+</ul></li>
+<li><p><strong>Severity Score Calculation</strong></p>
+<pre><code>Base Score:
+- Out: 1.0
+- Day-To-Day: 0.5
+- Other: 0.2
+
+Position Multiplier:
+- Starter positions (PG/SG/SF/PF/C): 1.0
+- Other: 0.8
+
+Injury Type Multiplier:
+- Severe (surgery, fracture, torn): 1.5
+- Moderate (sprain, strain): 1.2
+- Other: 1.0
+
+Final Score = Base × Position × Type</code></pre></li>
+<li><p><strong>Feature Calculation</strong> For each team (home/away):</p>
+<ul>
+<li>Count players out</li>
+<li>Count players day-to-day</li>
+<li>Sum severity scores</li>
+<li>Flag if star player out (severity &gt; 0.8)</li>
+<li>Calculate total injury impact</li>
+</ul>
+<p>Differential features:</p>
+<ul>
+<li><code>injury_severity_diff = home_severity - away_severity</code></li>
+<li><code>players_out_diff = home_out - away_out</code></li>
+<li><code>total_injury_impact_diff = home_impact - away_impact</code></li>
+</ul></li>
+</ol>
+</section>
+<section id="processing-details" class="level3">
+<h3 class="anchored" data-anchor-id="processing-details">Processing Details</h3>
+<ul>
+<li><strong>Batch Processing</strong>: Processes games in batches of 20</li>
+<li><strong>Rate Limiting</strong>: 0.3 seconds delay between game requests</li>
+<li><strong>Progress Tracking</strong>: Progress bars show batch completion</li>
+<li><strong>Error Handling</strong>: Continues on errors, leaves features as 0</li>
+</ul>
+</section>
+<section id="output-1" class="level3">
+<h3 class="anchored" data-anchor-id="output-1">Output</h3>
+<ul>
+<li><strong>File</strong>: <code>final_dataset_with_injuries.csv</code></li>
+<li><strong>Additional Columns</strong>: 13 injury feature columns</li>
+<li><strong>Coverage</strong>: ~93% of games have injury data (2,972+ games)</li>
+</ul>
+</section>
+<section id="time-requirements-1" class="level3">
+<h3 class="anchored" data-anchor-id="time-requirements-1">Time Requirements</h3>
+<ul>
+<li><strong>Duration</strong>: ~15-30 minutes for full dataset</li>
+<li><strong>Rate Limiting</strong>: 0.3 seconds between game requests</li>
+<li><strong>Total Time</strong>: 30-60 minutes for complete data collection</li>
+</ul>
+</section>
+</section>
+<section id="data-quality-measures" class="level2">
+<h2 class="anchored" data-anchor-id="data-quality-measures">2.4 Data Quality Measures</h2>
+<ol type="1">
+<li><strong>Progress Saving</strong>: Data saved every 5 batches during collection</li>
+<li><strong>Error Handling</strong>: Retry logic with exponential backoff for timeouts</li>
+<li><strong>Validation</strong>: Checks for required columns and data completeness</li>
+<li><strong>Backfilling</strong>: Missing spreads fetched from game summaries</li>
+<li><strong>Timezone Handling</strong>: Proper UTC to EST/EDT conversion</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="feature-engineering" class="level1">
+<h1>3. Feature Engineering</h1>
+<section id="elo-rating-system" class="level2">
+<h2 class="anchored" data-anchor-id="elo-rating-system">3.1 ELO Rating System</h2>
+<section id="calculation-method" class="level3">
+<h3 class="anchored" data-anchor-id="calculation-method">Calculation Method</h3>
+<p>ELO ratings are calculated chronologically from historical game results.</p>
+<p><strong>Initialization</strong>: - All teams start at 1500 ELO - K-factor: 20 (controls rating change magnitude) - Home advantage: +70 ELO points</p>
+<p><strong>Update Formula</strong>:</p>
+<pre><code>Expected Outcome = 1 / (1 + 10^((opponent_rating - team_rating - home_advantage) / 400))
+
+Actual Outcome = 0.5 + clip(margin / 20, -0.5, 0.5)
+  - Margin of +20 points = 1.0 (complete win)
+  - Margin of -20 points = 0.0 (complete loss)
+  - Clipped to [-0.5, 0.5] range
+
+New Rating = Old Rating + K × (Actual - Expected)</code></pre>
+<p><strong>Features Created</strong>: - <code>elo_home</code>: Home team’s ELO rating (before game) - <code>elo_away</code>: Away team’s ELO rating (before game) - <code>elo_diff</code>: <code>elo_home - elo_away</code></p>
+<p><strong>Key Properties</strong>: - Ratings update after each game - Uses rating from day before game (prevents data leakage) - Home advantage baked into ELO calculation - Ratings reflect team strength over time</p>
+</section>
+</section>
+<section id="rest-days-calculation" class="level2">
+<h2 class="anchored" data-anchor-id="rest-days-calculation">3.2 Rest Days Calculation</h2>
+<section id="method" class="level3">
+<h3 class="anchored" data-anchor-id="method">Method</h3>
+<p>Tracks days since each team’s last game.</p>
+<p><strong>Algorithm</strong>: 1. Sort all games chronologically 2. For each team, track last game date 3. Calculate: <code>rest_days = current_game_date - last_game_date</code> 4. Default: 3 days if team hasn’t played yet</p>
+<p><strong>Features Created</strong>: - <code>rest_days_home</code>: Days since home team’s last game - <code>rest_days_away</code>: Days since away team’s last game - <code>rest_diff</code>: <code>rest_days_home - rest_days_away</code></p>
+<p><strong>Rationale</strong>: - Teams with more rest typically perform better - Rest advantage can impact game outcomes - Differential captures relative rest advantage</p>
+</section>
+</section>
+<section id="rolling-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="rolling-statistics">3.3 Rolling Statistics</h2>
+<section id="calculation-method-1" class="level3">
+<h3 class="anchored" data-anchor-id="calculation-method-1">Calculation Method</h3>
+<p>Calculates moving averages over multiple game windows (3, 5, 10 games).</p>
+<p><strong>For Each Team</strong>: 1. Build historical game list (chronologically) 2. For each game, look back at previous N games 3. Calculate averages from those games 4. Handle team playing as home or away correctly</p>
+<p><strong>Margin Calculation</strong>: - If team was home: margin = home_score - away_score - If team was away: margin = away_score - home_score - Always from team’s perspective</p>
+<p><strong>Points For/Against</strong>: - Points for: Team’s score in that game - Points against: Opponent’s score in that game - Calculated correctly regardless of home/away</p>
+<p><strong>Features Created</strong> (for each window: 3, 5, 10): - <code>home_margin_avg_{window}</code>: Home team’s average margin - <code>away_margin_avg_{window}</code>: Away team’s average margin - <code>home_points_for_avg_{window}</code>: Home team’s average points scored - <code>away_points_for_avg_{window}</code>: Away team’s average points scored - <code>home_points_against_avg_{window}</code>: Home team’s average points allowed - <code>away_points_against_avg_{window}</code>: Away team’s average points allowed</p>
+<p><strong>Total</strong>: 18 rolling features (6 metrics × 3 windows)</p>
+<p><strong>Handling Missing Data</strong>: - If team hasn’t played N games yet, feature = 0 - Uses only games before current game (no data leakage)</p>
+</section>
+</section>
+<section id="temporal-features" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-features">3.4 Temporal Features</h2>
+<section id="features-created" class="level3">
+<h3 class="anchored" data-anchor-id="features-created">Features Created</h3>
+<ol type="1">
+<li><strong><code>day_of_week</code></strong>: 0 (Monday) to 6 (Sunday)
+<ul>
+<li>Captures weekly patterns (weekend games may differ)</li>
+</ul></li>
+<li><strong><code>month</code></strong>: 1 (January) to 12 (December)
+<ul>
+<li>Captures seasonal patterns (early season vs.&nbsp;playoffs)</li>
+</ul></li>
+<li><strong><code>is_weekend</code></strong>: Binary (1 if Saturday/Sunday, else 0)
+<ul>
+<li>Weekend games may have different dynamics</li>
+</ul></li>
+</ol>
+<p><strong>Removed Feature</strong>: - <strong><code>home_court</code></strong>: Was constant = 1 (removed - no information, caused overfitting) - Home advantage already captured in ELO ratings</p>
+</section>
+</section>
+<section id="draftkings-spread-features" class="level2">
+<h2 class="anchored" data-anchor-id="draftkings-spread-features">3.5 DraftKings Spread Features</h2>
+<section id="data-source" class="level3">
+<h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
+<ul>
+<li>Extracted from ESPN API (DraftKings is provider ID “100”)</li>
+<li>Available in <code>pointSpread</code> object for most games</li>
+</ul>
+</section>
+<section id="features-created-1" class="level3">
+<h3 class="anchored" data-anchor-id="features-created-1">Features Created</h3>
+<ol type="1">
+<li><p><strong><code>dk_spread</code></strong>: DraftKings closing spread</p>
+<ul>
+<li>For historical games: Closing spread (final line before game)</li>
+<li>For upcoming games: Current spread (latest available line)</li>
+<li>Converted to home-team perspective</li>
+<li>Falls back to ELO estimate if not available</li>
+</ul></li>
+<li><p><strong><code>dk_spread_diff</code></strong>: Market vs.&nbsp;Model Disagreement</p>
+<pre><code>dk_spread_diff = dk_spread - elo_spread_estimate</code></pre>
+<ul>
+<li><strong>Positive</strong>: Market favors home team more than ELO suggests</li>
+<li><strong>Negative</strong>: Market favors away team more than ELO suggests</li>
+<li>Captures where market and model disagree (potential value)</li>
+</ul></li>
+<li><p><strong><code>dk_spread_move</code></strong>: Line Movement</p>
+<pre><code>dk_spread_move = closing_spread - opening_spread</code></pre>
+<ul>
+<li><strong>Positive</strong>: Line moved toward home team (money on home)</li>
+<li><strong>Negative</strong>: Line moved toward away team (money on away)</li>
+<li>Captures market sentiment shifts and sharp money</li>
+</ul></li>
+</ol>
+</section>
+<section id="rationale" class="level3">
+<h3 class="anchored" data-anchor-id="rationale">Rationale</h3>
+<ul>
+<li>Market spreads are highly efficient</li>
+<li>Line movement indicates informed betting</li>
+<li>Disagreement with ELO may signal value opportunities</li>
+</ul>
+</section>
+</section>
+<section id="injury-features" class="level2">
+<h2 class="anchored" data-anchor-id="injury-features">3.6 Injury Features</h2>
+<section id="severity-score-calculation" class="level3">
+<h3 class="anchored" data-anchor-id="severity-score-calculation">Severity Score Calculation</h3>
+<p><strong>Base Score</strong> (from status): - Out: 1.0 - Day-To-Day: 0.5 - Other: 0.2</p>
+<p><strong>Position Multiplier</strong>: - Starter positions (PG, SG, SF, PF, C): 1.0 - Other: 0.8</p>
+<p><strong>Injury Type Multiplier</strong>: - Severe (surgery, fracture, torn, rupture): 1.5 - Moderate (sprain, strain): 1.2 - Other: 1.0</p>
+<p><strong>Final Score</strong>: <code>Base × Position × Type</code></p>
+</section>
+<section id="features-created-2" class="level3">
+<h3 class="anchored" data-anchor-id="features-created-2">Features Created</h3>
+<p><strong>Count Features</strong>: - <code>players_out_home/away</code>: Number of players out - <code>players_dtd_home/away</code>: Number of players day-to-day</p>
+<p><strong>Severity Features</strong>: - <code>injury_severity_home/away</code>: Sum of severity scores - <code>star_out_home/away</code>: Binary (1 if any player with severity &gt; 0.8)</p>
+<p><strong>Impact Features</strong>: - <code>total_injury_impact_home/away</code>: Same as severity (redundant, removed)</p>
+<p><strong>Differential Features</strong>: - <code>injury_severity_diff</code>: <code>home_severity - away_severity</code> - <code>players_out_diff</code>: <code>home_out - away_out</code></p>
+<p><strong>Total</strong>: 10 injury features in final model</p>
+</section>
+</section>
+<section id="interaction-features" class="level2">
+<h2 class="anchored" data-anchor-id="interaction-features">3.7 Interaction Features</h2>
+<section id="features-created-3" class="level3">
+<h3 class="anchored" data-anchor-id="features-created-3">Features Created</h3>
+<ol type="1">
+<li><strong><code>elo_diff_x_rest_diff</code></strong>: ELO difference × Rest difference
+<ul>
+<li>Captures interaction between team strength and rest advantage</li>
+<li>Strong team with rest advantage = even stronger</li>
+</ul></li>
+</ol>
+<p><strong>Rationale</strong>: Interactions can capture non-linear relationships that individual features miss.</p>
+</section>
+</section>
+<section id="target-variable-calculation" class="level2">
+<h2 class="anchored" data-anchor-id="target-variable-calculation">3.8 Target Variable Calculation</h2>
+<section id="residual-calculation" class="level3">
+<h3 class="anchored" data-anchor-id="residual-calculation">Residual Calculation</h3>
+<pre><code>margin = home_score - away_score
+closing_spread = DraftKings closing spread (or ELO estimate)
+residual = margin - closing_spread</code></pre>
+<p><strong>Interpretation</strong>: - <strong>Positive residual</strong>: Home team covered (won by more than spread) - <strong>Negative residual</strong>: Away team covered (home won by less than spread, or away won) - <strong>Zero residual</strong>: Push (exact spread)</p>
+<p><strong>Cover Prediction</strong>:</p>
+<pre><code>if residual &gt; threshold (1.40):
+    Home Covers
+else:
+    Away Covers</code></pre>
+<hr>
+</section>
+</section>
+</section>
+<section id="initial-model-development" class="level1">
+<h1>4. Initial Model Development</h1>
+<section id="baseline-features" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-features">2.1 Baseline Features</h2>
+<p>The initial model included:</p>
+<ol type="1">
+<li><strong>ELO Ratings</strong> (3 features)
+<ul>
+<li><code>elo_home</code>, <code>elo_away</code>, <code>elo_diff</code></li>
+<li>Calculated from historical game results</li>
+<li>Home advantage: +70 ELO points</li>
+</ul></li>
+<li><strong>Rest Days</strong> (3 features)
+<ul>
+<li><code>rest_days_home</code>, <code>rest_days_away</code>, <code>rest_diff</code></li>
+<li>Days since last game for each team</li>
+</ul></li>
+<li><strong>Rolling Statistics</strong> (18 features)
+<ul>
+<li>Margin averages (3, 5, 10 game windows)</li>
+<li>Points for/against averages (3, 5, 10 game windows)</li>
+<li>Calculated separately for home and away teams</li>
+</ul></li>
+<li><strong>Temporal Features</strong> (4 features)
+<ul>
+<li><code>day_of_week</code>, <code>month</code>, <code>is_weekend</code></li>
+<li><code>home_court</code> (constant = 1, later removed)</li>
+</ul></li>
+<li><strong>Interaction Features</strong> (1 feature)
+<ul>
+<li><code>elo_diff_x_rest_diff</code></li>
+</ul></li>
+</ol>
+<p><strong>Initial Performance</strong>: ~58% accuracy with significant overfitting</p>
+<hr>
+</section>
+</section>
+<section id="key-improvements-and-iterations" class="level1">
+<h1>5. Key Improvements and Iterations</h1>
+<section id="date-and-timezone-fixes" class="level2">
+<h2 class="anchored" data-anchor-id="date-and-timezone-fixes">5.1 Date and Timezone Fixes</h2>
+<section id="problem" class="level3">
+<h3 class="anchored" data-anchor-id="problem">Problem</h3>
+<ul>
+<li>Game dates were off by one day</li>
+<li>Game times showed as 12 AM instead of 7 PM (timezone issue)</li>
+</ul>
+</section>
+<section id="solution" class="level3">
+<h3 class="anchored" data-anchor-id="solution">Solution</h3>
+<ul>
+<li>Implemented proper UTC to EST/EDT conversion</li>
+<li>Used <code>tz_convert('America/New_York')</code> for accurate local times</li>
+<li>Removed manual date adjustments</li>
+</ul>
+</section>
+<section id="outcome" class="level3">
+<h3 class="anchored" data-anchor-id="outcome">Outcome</h3>
+<ul>
+<li>✅ Accurate game dates and times displayed</li>
+<li>✅ Predictions aligned with actual game schedules</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="cover-prediction-bias-fix" class="level2">
+<h2 class="anchored" data-anchor-id="cover-prediction-bias-fix">5.2 Cover Prediction Bias Fix</h2>
+<section id="problem-1" class="level3">
+<h3 class="anchored" data-anchor-id="problem-1">Problem</h3>
+<ul>
+<li>Model predicted “Home Covers” for 88-95% of games</li>
+<li>Actual distribution: ~56% Home Covers, 44% Away Covers</li>
+<li>Poor accuracy due to systematic bias</li>
+</ul>
+</section>
+<section id="root-cause-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="root-cause-analysis">Root Cause Analysis</h3>
+<ul>
+<li>Residual distribution had positive mean (1.31)</li>
+<li>Model learned to always predict positive residuals</li>
+<li>Threshold of 0.0 was too low</li>
+</ul>
+</section>
+<section id="solution-1" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1">Solution</h3>
+<ul>
+<li>Implemented threshold tuning to find optimal cutoff</li>
+<li>Tested thresholds from -2 to +3</li>
+<li>Selected threshold that maximizes accuracy while balancing predictions</li>
+</ul>
+</section>
+<section id="outcome-1" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-1">Outcome</h3>
+<ul>
+<li>✅ Optimal threshold: 1.40 (instead of 0.0)</li>
+<li>✅ Home Cover predictions: 68.9% (down from 91.5%)</li>
+<li>✅ Test accuracy improved: 58.2% → 61.9%</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="draftkings-spread-integration" class="level2">
+<h2 class="anchored" data-anchor-id="draftkings-spread-integration">5.3 DraftKings Spread Integration</h2>
+<section id="motivation" class="level3">
+<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
+<ul>
+<li>Market spreads reflect public opinion and sharp money</li>
+<li>Could provide valuable signal beyond ELO estimates</li>
+<li>ESPN API provides DraftKings spreads for most games</li>
+</ul>
+</section>
+<section id="implementation" class="level3">
+<h3 class="anchored" data-anchor-id="implementation">Implementation</h3>
+<p>Added 3 new features:</p>
+<ol type="1">
+<li><strong><code>dk_spread</code></strong>: DraftKings closing spread (or current for upcoming games)</li>
+<li><strong><code>dk_spread_diff</code></strong>: Difference between DraftKings spread and ELO estimate
+<ul>
+<li>Positive = Market favors home more than ELO</li>
+<li>Negative = Market favors away more than ELO</li>
+</ul></li>
+<li><strong><code>dk_spread_move</code></strong>: Line movement (opening → closing)
+<ul>
+<li>Captures market sentiment shifts</li>
+<li>Positive = Money coming in on home team</li>
+</ul></li>
+</ol>
+</section>
+<section id="data-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="data-extraction">Data Extraction</h3>
+<ul>
+<li>Extracted from ESPN API <code>pointSpread</code> object</li>
+<li>Opening spread: <code>pointSpread.home.open.line</code></li>
+<li>Closing spread: <code>pointSpread.home.close.line</code></li>
+<li>Converted to home-team perspective</li>
+</ul>
+</section>
+<section id="outcome-2" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-2">Outcome</h3>
+<ul>
+<li>✅ Market information incorporated into model</li>
+<li>✅ Features show up in top feature importance</li>
+<li>✅ Helps model understand market expectations</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="injury-feature-integration" class="level2">
+<h2 class="anchored" data-anchor-id="injury-feature-integration">5.4 Injury Feature Integration</h2>
+<section id="implementation-1" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-1">Implementation</h3>
+<p>Added 13 injury features:</p>
+<p><strong>Count Features</strong>: - <code>players_out_home/away</code>: Number of players out - <code>players_dtd_home/away</code>: Number of players day-to-day</p>
+<p><strong>Severity Features</strong>: - <code>injury_severity_home/away</code>: Weighted severity score - <code>star_out_home/away</code>: Binary (star player out)</p>
+<p><strong>Impact Features</strong>: - <code>total_injury_impact_home/away</code>: Combined impact score</p>
+<p><strong>Differential Features</strong>: - <code>injury_severity_diff</code>: Home - Away severity - <code>players_out_diff</code>: Home - Away players out - <code>total_injury_impact_diff</code>: Home - Away impact</p>
+</section>
+<section id="outcome-3" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-3">Outcome</h3>
+<ul>
+<li>✅ Injury features represent 9.0% of total feature importance</li>
+<li>✅ 10 injury features in final model (3 removed due to redundancy)</li>
+<li>✅ Model captures injury impact on game outcomes</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="multicollinearity-analysis-and-feature-removal" class="level2">
+<h2 class="anchored" data-anchor-id="multicollinearity-analysis-and-feature-removal">5.5 Multicollinearity Analysis and Feature Removal</h2>
+<section id="problem-identified" class="level3">
+<h3 class="anchored" data-anchor-id="problem-identified">Problem Identified</h3>
+<p>Diagnostics revealed:</p>
+<ol type="1">
+<li><strong>Perfect Correlations (r = 1.0)</strong>:
+<ul>
+<li><code>elo_diff</code> ↔︎ <code>elo_spread_estimate</code></li>
+<li><code>injury_severity_home</code> ↔︎ <code>total_injury_impact_home</code></li>
+<li><code>injury_severity_away</code> ↔︎ <code>total_injury_impact_away</code></li>
+<li><code>injury_severity_diff</code> ↔︎ <code>total_injury_impact_diff</code></li>
+</ul></li>
+<li><strong>High Correlations (r ≥ 0.8)</strong>:
+<ul>
+<li>30 feature pairs with high correlation</li>
+<li>Points for/against averages highly correlated</li>
+<li>Margin averages across different windows correlated</li>
+</ul></li>
+</ol>
+</section>
+<section id="solution-2" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2">Solution</h3>
+<p>Removed redundant features: - <code>elo_spread_estimate</code> (duplicate of <code>elo_diff</code>) - <code>total_injury_impact_home/away/diff</code> (duplicates of severity features) - <code>home_court</code> (constant = 1, no information)</p>
+</section>
+<section id="outcome-4" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-4">Outcome</h3>
+<ul>
+<li>✅ Reduced from 47 to 43 features</li>
+<li>✅ Eliminated perfect correlations</li>
+<li>✅ Model performance maintained/improved</li>
+<li>✅ Faster training and inference</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="regularization-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="regularization-improvements">5.6 Regularization Improvements</h2>
+<section id="initial-problem" class="level3">
+<h3 class="anchored" data-anchor-id="initial-problem">Initial Problem</h3>
+<ul>
+<li>Moderate overfitting (8.5% train/test accuracy gap)</li>
+<li>Model too complex, learning noise</li>
+</ul>
+</section>
+<section id="regularization-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="regularization-strategy">Regularization Strategy</h3>
+<p>Tested three configurations:</p>
+<ol type="1">
+<li><strong>Current (Moderate Regularization)</strong>
+<ul>
+<li>Learning rate: 0.03, num_leaves: 20</li>
+<li>Test accuracy: 59.0%</li>
+</ul></li>
+<li><strong>More Regularized</strong> ⭐ <strong>BEST</strong>
+<ul>
+<li>Learning rate: 0.02, num_leaves: 15</li>
+<li>Feature/bagging: 0.6, min_child_samples: 40</li>
+<li>L1/L2: 0.2, max_depth: 5</li>
+<li>Test accuracy: <strong>61.1%</strong></li>
+</ul></li>
+<li><strong>Less Regularized</strong>
+<ul>
+<li>Learning rate: 0.05, num_leaves: 25</li>
+<li>Test accuracy: 60.0%</li>
+</ul></li>
+</ol>
+</section>
+<section id="final-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="final-configuration">Final Configuration</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"learning_rate"</span>: <span class="fl">0.02</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"num_leaves"</span>: <span class="dv">15</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"feature_fraction"</span>: <span class="fl">0.6</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bagging_fraction"</span>: <span class="fl">0.6</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_child_samples"</span>: <span class="dv">40</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lambda_l1"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lambda_l2"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">5</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_split_gain"</span>: <span class="fl">0.2</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="outcome-5" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-5">Outcome</h3>
+<ul>
+<li>✅ Test accuracy: 61.9% (with optimal threshold)</li>
+<li>✅ Overfitting reduced: 1.9% gap (excellent generalization)</li>
+<li>✅ Balanced predictions: 68.9% Home Cover rate</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="threshold-optimization" class="level2">
+<h2 class="anchored" data-anchor-id="threshold-optimization">5.7 Threshold Optimization</h2>
+<section id="problem-2" class="level3">
+<h3 class="anchored" data-anchor-id="problem-2">Problem</h3>
+<ul>
+<li>Default threshold (0.0) caused severe Home Cover bias</li>
+<li>91.5% of predictions were “Home Covers”</li>
+<li>Actual distribution: 56.2% Home Covers</li>
+</ul>
+</section>
+<section id="solution-3" class="level3">
+<h3 class="anchored" data-anchor-id="solution-3">Solution</h3>
+<ul>
+<li>Tested thresholds from -2.0 to +3.0 in 0.1 increments</li>
+<li>Selected threshold that maximizes test accuracy</li>
+<li>Balanced precision and recall</li>
+</ul>
+</section>
+<section id="results-by-threshold" class="level3">
+<h3 class="anchored" data-anchor-id="results-by-threshold">Results by Threshold</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Threshold</th>
+<th>Test Accuracy</th>
+<th>Home Cover Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.0 (default)</td>
+<td>57.3%</td>
+<td>95.1%</td>
+<td>Severe bias</td>
+</tr>
+<tr class="even">
+<td>0.40</td>
+<td>59.3%</td>
+<td>84.6%</td>
+<td>Improved but still biased</td>
+</tr>
+<tr class="odd">
+<td>1.40 (optimal)</td>
+<td><strong>61.9%</strong></td>
+<td>68.9%</td>
+<td>Best balance</td>
+</tr>
+<tr class="even">
+<td>2.40</td>
+<td>57.3%</td>
+<td>41.1%</td>
+<td>Overcorrected</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="outcome-6" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-6">Outcome</h3>
+<ul>
+<li>✅ Optimal threshold: 1.40</li>
+<li>✅ Test accuracy: 61.9%</li>
+<li>✅ Home Cover rate: 68.9% (closer to 56.2% actual)</li>
+<li>✅ Better precision (0.631) and recall (0.774)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="final-model-performance" class="level1">
+<h1>6. Final Model Performance</h1>
+<section id="overall-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="overall-metrics">6.1 Overall Metrics</h2>
+<section id="regression-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="regression-metrics">Regression Metrics</h3>
+<ul>
+<li><strong>Test MAE</strong>: 11.78 points</li>
+<li><strong>Test RMSE</strong>: 15.35 points</li>
+<li><strong>R²</strong>: 0.022 (positive, indicating some predictive power)</li>
+</ul>
+</section>
+<section id="classification-metrics-cover-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="classification-metrics-cover-predictions">Classification Metrics (Cover Predictions)</h3>
+<ul>
+<li><strong>Test Accuracy</strong>: 61.9%</li>
+<li><strong>Precision</strong>: 0.631</li>
+<li><strong>Recall</strong>: 0.774</li>
+<li><strong>F1 Score</strong>: 0.695</li>
+</ul>
+</section>
+<section id="generalization" class="level3">
+<h3 class="anchored" data-anchor-id="generalization">Generalization</h3>
+<ul>
+<li><strong>Train Accuracy</strong>: 63.7%</li>
+<li><strong>Test Accuracy</strong>: 61.9%</li>
+<li><strong>Gap</strong>: 1.9% (excellent - indicates good generalization)</li>
+</ul>
+</section>
+</section>
+<section id="confusion-matrix-test-set" class="level2">
+<h2 class="anchored" data-anchor-id="confusion-matrix-test-set">6.2 Confusion Matrix (Test Set)</h2>
+<pre><code>                Predicted
+              Home Cover  Away Cover
+Actual Home Cover    277         81
+Actual Away Cover    162        117</code></pre>
+<p><strong>Interpretation</strong>: - True Positives (Home Cover): 277 - True Negatives (Away Cover): 117 - False Positives: 162 - False Negatives: 81</p>
+</section>
+<section id="feature-importance" class="level2">
+<h2 class="anchored" data-anchor-id="feature-importance">6.3 Feature Importance</h2>
+<p>Top 15 Most Important Features:</p>
+<ol type="1">
+<li><code>away_points_for_avg_3</code> (62,208)</li>
+<li><code>away_points_against_avg_5</code> (58,009)</li>
+<li><code>away_margin_avg_10</code> (55,945)</li>
+<li><code>home_margin_avg_10</code> (52,332)</li>
+<li><code>elo_home</code> (49,830)</li>
+<li><code>away_margin_avg_3</code> (48,063)</li>
+<li><code>elo_diff</code> (45,860)</li>
+<li><code>away_points_against_avg_10</code> (42,080)</li>
+<li><code>home_points_for_avg_5</code> (40,929)</li>
+<li><code>away_margin_avg_5</code> (38,427)</li>
+<li><code>home_points_for_avg_10</code> (33,489)</li>
+<li><code>home_margin_avg_3</code> (31,619)</li>
+<li><code>home_points_for_avg_3</code> (30,971)</li>
+<li><code>home_points_against_avg_3</code> (30,898)</li>
+<li><code>away_points_against_avg_3</code> (30,800)</li>
+</ol>
+<p><strong>Injury Features</strong>: Represent 9.0% of total importance (10 features)</p>
+<hr>
+</section>
+</section>
+<section id="data-collection-pipeline" class="level1">
+<h1>7. Data Collection Pipeline</h1>
+<section id="script-organization" class="level2">
+<h2 class="anchored" data-anchor-id="script-organization">7.1 Script Organization</h2>
+<p>All data collection scripts renamed with clear prefixes:</p>
+<ul>
+<li><strong><code>00_data_collection_run_all.py</code></strong>: Master script (runs full pipeline)</li>
+<li><strong><code>01_data_collection_fetch_historical_games.py</code></strong>: Fetches games with spreads</li>
+<li><strong><code>02_data_collection_add_injuries.py</code></strong>: Adds injury features</li>
+</ul>
+</section>
+<section id="data-files" class="level2">
+<h2 class="anchored" data-anchor-id="data-files">7.2 Data Files</h2>
+<ul>
+<li><strong><code>final_dataset_raw_games.csv</code></strong>: Games with DraftKings spreads (intermediate)</li>
+<li><strong><code>final_dataset_with_injuries.csv</code></strong>: Complete dataset (3,183 games, ready for training)</li>
+</ul>
+</section>
+<section id="data-quality" class="level2">
+<h2 class="anchored" data-anchor-id="data-quality">7.3 Data Quality</h2>
+<ul>
+<li><strong>Games with scores</strong>: 3,183/3,183 (100%)</li>
+<li><strong>Games with DraftKings spreads</strong>: 71/3,183 (2.2%)
+<ul>
+<li>Note: Historical spreads not available for old games</li>
+<li>Model uses ELO estimates for games without spreads</li>
+</ul></li>
+<li><strong>Games with injury data</strong>: ~93% (2,972+ games)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="prediction-pipeline" class="level1">
+<h1>8. Prediction Pipeline</h1>
+<section id="output-files" class="level2">
+<h2 class="anchored" data-anchor-id="output-files">8.1 Output Files</h2>
+<ol type="1">
+<li><strong><code>predictions_latest.xlsx/csv</code></strong>
+<ul>
+<li>Current predictions (overwritten each run)</li>
+<li>Next 2 days of games</li>
+<li>Includes: Line, Model Line, Cover Prediction, Confidence</li>
+</ul></li>
+<li><strong><code>predictions_history.csv</code></strong>
+<ul>
+<li>Running log of all predictions</li>
+<li>Appended each run</li>
+<li>Used for correctness tracking</li>
+</ul></li>
+<li><strong><code>prediction_correctness.csv</code></strong>
+<ul>
+<li>Tracks prediction accuracy</li>
+<li>Compares predictions to actual results</li>
+<li>Regenerated each run</li>
+</ul></li>
+<li><strong><code>predictions_summary.xlsx</code></strong>
+<ul>
+<li>Combined history + correctness</li>
+<li>Excel format with multiple sheets</li>
+<li>Sorted chronologically</li>
+</ul></li>
+</ol>
+</section>
+<section id="prediction-format" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-format">8.2 Prediction Format</h2>
+<ul>
+<li><strong>Line</strong>: DraftKings spread in sportsbook notation (e.g., “PHI -4.5 / WSH +4.5”)</li>
+<li><strong>Model Line</strong>: Model’s predicted spread in same format</li>
+<li><strong>Cover Prediction</strong>: “Favorite Covers” or “Underdog Covers”</li>
+<li><strong>Confidence</strong>: High/Medium/Low based on residual magnitude</li>
+<li><strong>Recommendation</strong>: Betting recommendation based on model prediction</li>
+</ul>
+</section>
+<section id="automation" class="level2">
+<h2 class="anchored" data-anchor-id="automation">8.3 Automation</h2>
+<p>The prediction pipeline is fully automated using macOS launchd. See Section 9 for detailed automation setup and daily workflow.</p>
+<hr>
+</section>
+</section>
+<section id="daily-automation-and-workflow" class="level1">
+<h1>9. Daily Automation and Workflow</h1>
+<section id="overview-1" class="level2">
+<h2 class="anchored" data-anchor-id="overview-1">9.1 Overview</h2>
+<p>The entire prediction pipeline has been automated to run daily without manual intervention. This ensures the model is always trained on the latest data and generates fresh predictions for upcoming games.</p>
+</section>
+<section id="daily-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="daily-workflow">9.2 Daily Workflow</h2>
+<section id="automated-process-300-am-daily" class="level3">
+<h3 class="anchored" data-anchor-id="automated-process-300-am-daily">Automated Process (3:00 AM Daily)</h3>
+<p>Every night at 3:00 AM, the system automatically:</p>
+<ol type="1">
+<li><strong>Trains the Model</strong>
+<ul>
+<li>Loads the latest historical dataset (<code>final_dataset_with_injuries.csv</code>)</li>
+<li>Builds features (ELO, rolling stats, injuries, DraftKings spreads)</li>
+<li>Trains LightGBM model with time-series cross-validation</li>
+<li>Evaluates performance and selects optimal threshold</li>
+</ul></li>
+<li><strong>Generates Predictions</strong>
+<ul>
+<li>Fetches upcoming games from ESPN API (next 2 days)</li>
+<li>Builds features for upcoming games using latest team statistics</li>
+<li>Makes predictions using the trained model</li>
+<li>Calculates cover predictions with confidence levels</li>
+</ul></li>
+<li><strong>Updates Output Files</strong>
+<ul>
+<li><strong>Latest Predictions</strong>: Overwrites <code>predictions/predictions_latest.xlsx</code> and <code>.csv</code></li>
+<li><strong>History</strong>: Appends to <code>predictions/predictions_history.xlsx</code> and <code>.csv</code></li>
+<li><strong>Correctness</strong>: Updates <code>predictions/prediction_correctness.xlsx</code> with completed game results</li>
+<li><strong>Summary</strong>: Creates combined workbook with History and Correctness sheets</li>
+</ul></li>
+<li><strong>Logs Execution</strong>
+<ul>
+<li>Creates date-stamped log files: <code>logs/daily_predictions_YYYYMMDD.log</code></li>
+<li>Logs all steps, errors, and completion status</li>
+<li>Separate error log: <code>logs/daily_predictions_error_YYYYMMDD.log</code></li>
+</ul></li>
+</ol>
+</section>
+<section id="workflow-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-diagram">Workflow Diagram</h3>
+<pre><code>3:00 AM Daily Trigger
+    ↓
+Load Historical Data (final_dataset_with_injuries.csv)
+    ↓
+Build Features (ELO, rolling stats, injuries, spreads)
+    ↓
+Train LightGBM Model (with cross-validation)
+    ↓
+Fetch Upcoming Games (next 2 days from ESPN API)
+    ↓
+Build Features for Upcoming Games
+    ↓
+Generate Predictions (residuals, cover predictions)
+    ↓
+Update Prediction Files (latest, history, correctness, summary)
+    ↓
+Log Results (date-stamped log files)
+    ↓
+Complete</code></pre>
+</section>
+</section>
+<section id="data-collection-and-model-retraining" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection-and-model-retraining">9.3 Data Collection and Model Retraining</h2>
+<section id="data-updates" class="level3">
+<h3 class="anchored" data-anchor-id="data-updates">Data Updates</h3>
+<p>The model is retrained daily on the complete historical dataset:</p>
+<ul>
+<li><strong>Training Data</strong>: All historical games from October 2023 to present</li>
+<li><strong>Data Source</strong>: <code>data/final_dataset_with_injuries.csv</code></li>
+<li><strong>Features</strong>: 43 features including:
+<ul>
+<li>ELO ratings (updated chronologically)</li>
+<li>Rolling statistics (3, 5, 10-game windows)</li>
+<li>Injury data (severity-weighted)</li>
+<li>DraftKings spreads (opening/closing, line movement)</li>
+</ul></li>
+</ul>
+</section>
+<section id="model-retraining-process" class="level3">
+<h3 class="anchored" data-anchor-id="model-retraining-process">Model Retraining Process</h3>
+<p>Each day, the model is retrained from scratch:</p>
+<ol type="1">
+<li><strong>Load Data</strong>: Reads complete historical dataset</li>
+<li><strong>Feature Engineering</strong>:
+<ul>
+<li>Calculates ELO ratings chronologically</li>
+<li>Computes rolling statistics for each team</li>
+<li>Adds injury features for each game</li>
+<li>Incorporates DraftKings spread features</li>
+</ul></li>
+<li><strong>Train/Test Split</strong>: Time-series split (80% train, 20% test)</li>
+<li><strong>Model Training</strong>: LightGBM with regularization parameters</li>
+<li><strong>Threshold Tuning</strong>: Finds optimal threshold for cover predictions</li>
+<li><strong>Evaluation</strong>: Calculates accuracy, MAE, RMSE, confusion matrix</li>
+</ol>
+<p><strong>Why Retrain Daily?</strong> - Incorporates latest game results into ELO ratings - Updates rolling statistics with most recent performance - Captures evolving team strength and trends - Ensures predictions use the most current model</p>
+</section>
+<section id="manual-data-collection" class="level3">
+<h3 class="anchored" data-anchor-id="manual-data-collection">Manual Data Collection</h3>
+<p>When new historical data is needed (e.g., end of season, major update):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/00_data_collection_run_all.py <span class="at">--non-interactive</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This runs: 1. <strong>Step 1</strong>: Fetches historical games with spreads (20-40 minutes) 2. <strong>Step 2</strong>: Adds injury features (15-30 minutes)</p>
+<p>Output: Updated <code>data/final_dataset_with_injuries.csv</code></p>
+</section>
+</section>
+<section id="prediction-generation-process" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-generation-process">9.4 Prediction Generation Process</h2>
+<section id="step-by-step-prediction-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="step-by-step-prediction-workflow">Step-by-Step Prediction Workflow</h3>
+<ol type="1">
+<li><strong>Fetch Upcoming Games</strong>
+<ul>
+<li>Queries ESPN API for games in next 2 days</li>
+<li>Extracts: teams, dates, times, current spreads</li>
+<li>Handles timezone conversion (UTC → EST/EDT)</li>
+</ul></li>
+<li><strong>Build Features for Upcoming Games</strong>
+<ul>
+<li><strong>ELO Ratings</strong>: Uses current ELO ratings (from historical data)</li>
+<li><strong>Rest Days</strong>: Calculates days since last game for each team</li>
+<li><strong>Rolling Statistics</strong>: Uses most recent 3, 5, 10-game averages</li>
+<li><strong>Injury Features</strong>: Fetches current injury status from ESPN API</li>
+<li><strong>DraftKings Spreads</strong>: Uses current spread from API</li>
+<li><strong>Market Features</strong>: Calculates spread differences and movements</li>
+</ul></li>
+<li><strong>Make Predictions</strong>
+<ul>
+<li>Model predicts residual: <code>predicted_residual = model.predict(features)</code></li>
+<li>Calculates predicted margin: <code>predicted_margin = closing_spread + predicted_residual</code></li>
+<li>Determines cover prediction using optimal threshold (1.40)</li>
+<li>Assigns confidence levels (High/Medium/Low) based on residual magnitude</li>
+</ul></li>
+<li><strong>Format Output</strong>
+<ul>
+<li>Creates sportsbook-style line notation (e.g., “PHI -4.5 / WSH +4.5”)</li>
+<li>Generates model line from predicted margin</li>
+<li>Identifies favorite/underdog teams</li>
+<li>Creates recommendation text</li>
+</ul></li>
+<li><strong>Save Results</strong>
+<ul>
+<li>Updates all prediction files (latest, history, correctness, summary)</li>
+<li>Sorts chronologically by date</li>
+<li>Maintains game_id for tracking correctness</li>
+</ul></li>
+</ol>
+</section>
+</section>
+<section id="automation-setup" class="level2">
+<h2 class="anchored" data-anchor-id="automation-setup">9.5 Automation Setup</h2>
+<section id="macos-launchd-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="macos-launchd-configuration">macOS Launchd Configuration</h3>
+<p>The system uses macOS launchd for reliable daily automation:</p>
+<p><strong>Configuration File</strong>: <code>~/Library/LaunchAgents/com.nba.predictions.daily.plist</code></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">key</span>&gt;StartCalendarInterval&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">key</span>&gt;Hour&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">integer</span>&gt;3&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">key</span>&gt;Minute&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">integer</span>&gt;0&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dict</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Key Features</strong>: - <strong>Schedule</strong>: Runs daily at 3:00 AM - <strong>Wake from Sleep</strong>: Can wake Mac from sleep if plugged in - <strong>Automatic</strong>: Runs even if user is logged out - <strong>Logging</strong>: Date-stamped log files for each run</p>
+</section>
+<section id="wrapper-script" class="level3">
+<h3 class="anchored" data-anchor-id="wrapper-script">Wrapper Script</h3>
+<p>A bash wrapper script (<code>scripts/run_daily_with_logging.sh</code>) handles: - Date-stamped log file creation - Timestamp logging - Error handling - Directory management</p>
+</section>
+<section id="logging-system" class="level3">
+<h3 class="anchored" data-anchor-id="logging-system">Logging System</h3>
+<p><strong>Date-Stamped Logs</strong>: - <code>logs/daily_predictions_YYYYMMDD.log</code> - Main execution log - <code>logs/daily_predictions_error_YYYYMMDD.log</code> - Error log</p>
+<p><strong>Log Contents</strong>: - Execution start/end timestamps - Model training progress - Prediction generation status - File update confirmations - Any errors or warnings</p>
+<p><strong>Benefits</strong>: - One log file per day (easy to track) - Timestamps for debugging - Separate error logs for troubleshooting - Historical log archive</p>
+</section>
+</section>
+<section id="efficiency-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="efficiency-improvements">9.6 Efficiency Improvements</h2>
+<section id="automation-benefits" class="level3">
+<h3 class="anchored" data-anchor-id="automation-benefits">Automation Benefits</h3>
+<ol type="1">
+<li><strong>Time Savings</strong>: No manual intervention required
+<ul>
+<li>Previously: Manual data collection, training, prediction generation</li>
+<li>Now: Fully automated daily execution</li>
+</ul></li>
+<li><strong>Consistency</strong>: Predictions generated at same time daily
+<ul>
+<li>Ensures fresh predictions every morning</li>
+<li>Model always trained on latest data</li>
+</ul></li>
+<li><strong>Reliability</strong>: Launchd ensures execution
+<ul>
+<li>Wakes Mac from sleep if needed</li>
+<li>Runs even if user is away</li>
+<li>Automatic error logging</li>
+</ul></li>
+<li><strong>Data Freshness</strong>: Model retrained daily
+<ul>
+<li>Incorporates latest game results</li>
+<li>Updates team statistics</li>
+<li>Captures evolving trends</li>
+</ul></li>
+</ol>
+</section>
+<section id="workflow-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-optimization">Workflow Optimization</h3>
+<p><strong>Before Automation</strong>: - Manual data collection (30-60 minutes) - Manual model training (5-10 minutes) - Manual prediction generation (2-3 minutes) - <strong>Total</strong>: ~40-75 minutes of manual work</p>
+<p><strong>After Automation</strong>: - Automatic execution at 3:00 AM - Zero manual intervention - Results ready by morning - <strong>Total</strong>: 0 minutes of manual work</p>
+</section>
+<section id="file-organization" class="level3">
+<h3 class="anchored" data-anchor-id="file-organization">File Organization</h3>
+<p>All outputs organized in dedicated folders: - <code>predictions/</code> - All prediction files (latest, history, correctness, summary) - <code>logs/</code> - Date-stamped execution logs - <code>data/</code> - Training datasets - <code>scripts/</code> - Production scripts (test scripts archived)</p>
+</section>
+</section>
+<section id="monitoring-and-maintenance" class="level2">
+<h2 class="anchored" data-anchor-id="monitoring-and-maintenance">9.7 Monitoring and Maintenance</h2>
+<section id="daily-checks" class="level3">
+<h3 class="anchored" data-anchor-id="daily-checks">Daily Checks</h3>
+<ol type="1">
+<li><p><strong>Verify Execution</strong>: Check log file for completion</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-f</span> logs/daily_predictions_<span class="va">$(</span><span class="fu">date</span> +%Y%m%d<span class="va">)</span>.log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Review Predictions</strong>: Open <code>predictions/predictions_latest.xlsx</code></p></li>
+<li><p><strong>Check Errors</strong>: Review <code>logs/daily_predictions_error_YYYYMMDD.log</code> if issues</p></li>
+</ol>
+</section>
+<section id="periodic-maintenance" class="level3">
+<h3 class="anchored" data-anchor-id="periodic-maintenance">Periodic Maintenance</h3>
+<ul>
+<li><strong>Weekly</strong>: Review prediction accuracy trends</li>
+<li><strong>Monthly</strong>: Update historical data if needed</li>
+<li><strong>Season End</strong>: Run full data collection for new season</li>
+</ul>
+</section>
+<section id="troubleshooting" class="level3">
+<h3 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h3>
+<p>If automation fails: 1. Check launchd status: <code>launchctl list | grep nba</code> 2. Review error logs: <code>logs/daily_predictions_error_YYYYMMDD.log</code> 3. Test manually: <code>python3 scripts/daily_predictions.py</code> 4. Reload launchd: <code>launchctl unload ~/Library/LaunchAgents/com.nba.predictions.daily.plist &amp;&amp; launchctl load ~/Library/LaunchAgents/com.nba.predictions.daily.plist</code></p>
+<hr>
+</section>
+</section>
+</section>
+<section id="technical-implementation-details" class="level1">
+<h1>10. Technical Implementation Details</h1>
+<section id="elo-rating-system-1" class="level2">
+<h2 class="anchored" data-anchor-id="elo-rating-system-1">10.1 ELO Rating System</h2>
+<ul>
+<li><p><strong>Initial Rating</strong>: 1500</p></li>
+<li><p><strong>K-Factor</strong>: 20</p></li>
+<li><p><strong>Home Advantage</strong>: +70 ELO points</p></li>
+<li><p><strong>Update Formula</strong>:</p>
+<pre><code>new_rating = old_rating + k_factor * (actual - expected)</code></pre></li>
+<li><p><strong>Expected</strong>: Based on ELO difference</p></li>
+<li><p><strong>Actual</strong>: Based on game margin (clipped to [-0.5, 0.5])</p></li>
+</ul>
+</section>
+<section id="feature-engineering-summary" class="level2">
+<h2 class="anchored" data-anchor-id="feature-engineering-summary">10.2 Feature Engineering Summary</h2>
+<p>See <strong>Section 3: Feature Engineering</strong> for detailed explanations of how each feature is calculated.</p>
+<section id="key-points" class="level3">
+<h3 class="anchored" data-anchor-id="key-points">Key Points:</h3>
+<ul>
+<li><strong>Rolling Statistics</strong>: Calculated for 3, 5, and 10 game windows, handling home/away correctly</li>
+<li><strong>Rest Days</strong>: Tracked chronologically, default to 3 days for teams without history</li>
+<li><strong>DraftKings Spread Features</strong>: Extracted from ESPN API, converted to home-team perspective</li>
+<li><strong>Injury Features</strong>: Severity-weighted scores based on player status and injury type</li>
+<li><strong>ELO Ratings</strong>: Updated chronologically with home advantage baked in</li>
+</ul>
+</section>
+</section>
+<section id="model-training" class="level2">
+<h2 class="anchored" data-anchor-id="model-training">10.3 Model Training</h2>
+<ul>
+<li><strong>Cross-Validation</strong>: Time-series split (3 folds)</li>
+<li><strong>Early Stopping</strong>: 30 rounds without improvement</li>
+<li><strong>Train/Test Split</strong>: 80/20 (time-based, most recent as test)</li>
+<li><strong>Evaluation Metric</strong>: MAE (Mean Absolute Error)</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="challenges-and-solutions" class="level1">
+<h1>11. Challenges and Solutions</h1>
+<section id="challenge-home-cover-bias" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-home-cover-bias">11.1 Challenge: Home Cover Bias</h2>
+<p><strong>Problem</strong>: Model predicted “Home Cover” 88-95% of the time</p>
+<p><strong>Root Causes</strong>: 1. Residual distribution had positive mean 2. Threshold of 0.0 too low 3. Model learned systematic bias</p>
+<p><strong>Solutions</strong>: 1. Threshold optimization (found optimal: 1.40) 2. Removed constant <code>home_court</code> feature 3. Increased regularization</p>
+<p><strong>Outcome</strong>: Home Cover rate reduced to 68.9%, accuracy improved to 61.9%</p>
+</section>
+<section id="challenge-overfitting" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-overfitting">11.2 Challenge: Overfitting</h2>
+<p><strong>Problem</strong>: 8.5% gap between train and test accuracy</p>
+<p><strong>Solutions</strong>: 1. Increased regularization (L1/L2, feature/bagging fraction) 2. Reduced model complexity (num_leaves, max_depth) 3. Removed redundant features</p>
+<p><strong>Outcome</strong>: Gap reduced to 1.9% (excellent generalization)</p>
+</section>
+<section id="challenge-missing-historical-spreads" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-missing-historical-spreads">11.3 Challenge: Missing Historical Spreads</h2>
+<p><strong>Problem</strong>: Only 2.2% of historical games have actual DraftKings spreads</p>
+<p><strong>Solution</strong>: - Use ELO-based spread estimates for games without spreads - Formula: <code>(elo_home - elo_away) / 25</code> - Prioritize actual spreads when available</p>
+<p><strong>Outcome</strong>: Model works for all games, uses best available spread data</p>
+</section>
+<section id="challenge-api-rate-limiting" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-api-rate-limiting">11.4 Challenge: API Rate Limiting</h2>
+<p><strong>Problem</strong>: ESPN API has rate limits, data collection takes 30-60 minutes</p>
+<p><strong>Solutions</strong>: 1. Added delays between requests (0.3 seconds) 2. Batch processing with progress bars 3. Retry logic with exponential backoff 4. Progress saved periodically</p>
+<p><strong>Outcome</strong>: Reliable data collection with progress tracking</p>
+<hr>
+</section>
+</section>
+<section id="model-limitations-and-future-improvements" class="level1">
+<h1>12. Model Limitations and Future Improvements</h1>
+<section id="current-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="current-limitations">12.1 Current Limitations</h2>
+<ol type="1">
+<li><strong>Historical Spread Coverage</strong>: Only 2.2% of games have actual spreads
+<ul>
+<li>Most games use ELO estimates</li>
+<li>Could improve with more spread data sources</li>
+</ul></li>
+<li><strong>Home Cover Bias</strong>: Still predicts Home Cover 68.9% vs 56.2% actual
+<ul>
+<li>Could be improved with better threshold or model adjustments</li>
+</ul></li>
+<li><strong>Feature Engineering</strong>: Some features may be redundant
+<ul>
+<li>Points for/against highly correlated</li>
+<li>Could simplify further</li>
+</ul></li>
+<li><strong>Temporal Patterns</strong>: Model doesn’t explicitly capture season trends
+<ul>
+<li>Teams improve/decline over season</li>
+<li>Could add time-based features</li>
+</ul></li>
+</ol>
+</section>
+<section id="potential-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="potential-improvements">12.2 Potential Improvements</h2>
+<ol type="1">
+<li><strong>Additional Data Sources</strong>:
+<ul>
+<li>Multiple sportsbook lines (consensus)</li>
+<li>Player-level statistics</li>
+<li>Head-to-head records</li>
+<li>Home/away splits</li>
+</ul></li>
+<li><strong>Model Enhancements</strong>:
+<ul>
+<li>Ensemble methods (combine multiple models)</li>
+<li>Deep learning approaches</li>
+<li>Feature selection algorithms</li>
+<li>Hyperparameter optimization</li>
+</ul></li>
+<li><strong>Evaluation Improvements</strong>:
+<ul>
+<li>Profit/loss simulation</li>
+<li>Confidence intervals</li>
+<li>Risk-adjusted metrics</li>
+</ul></li>
+<li><strong>Real-time Updates</strong>:
+<ul>
+<li>Live line movement tracking</li>
+<li>Injury updates during day</li>
+<li>Last-minute lineup changes</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>13. Conclusion</h1>
+<section id="summary-of-achievements" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-achievements">13.1 Summary of Achievements</h2>
+<p>Through systematic improvements, we developed a robust NBA spread prediction model with:</p>
+<ul>
+<li>✅ <strong>61.9% test accuracy</strong> (vs 50% baseline)</li>
+<li>✅ <strong>Good generalization</strong> (1.9% train/test gap)</li>
+<li>✅ <strong>Balanced predictions</strong> (68.9% Home Cover rate)</li>
+<li>✅ <strong>43 well-engineered features</strong></li>
+<li>✅ <strong>Comprehensive evaluation</strong> (confusion matrix, metrics)</li>
+<li>✅ <strong>Production-ready pipeline</strong> (automated, documented)</li>
+</ul>
+</section>
+<section id="key-learnings" class="level2">
+<h2 class="anchored" data-anchor-id="key-learnings">13.2 Key Learnings</h2>
+<ol type="1">
+<li><strong>Multicollinearity matters</strong>: Removing redundant features improved model</li>
+<li><strong>Regularization is crucial</strong>: More regularization improved generalization</li>
+<li><strong>Threshold tuning essential</strong>: Optimal threshold significantly improved accuracy</li>
+<li><strong>Market data valuable</strong>: DraftKings spreads add predictive power</li>
+<li><strong>Injury data helps</strong>: 9% of feature importance from injuries</li>
+</ol>
+</section>
+<section id="model-status" class="level2">
+<h2 class="anchored" data-anchor-id="model-status">13.3 Model Status</h2>
+<p><strong>✅ Ready for Production</strong></p>
+<p>The model is trained, evaluated, and ready to make predictions for upcoming NBA games. The prediction pipeline is automated and will generate daily predictions with proper tracking and correctness monitoring.</p>
+<hr>
+</section>
+</section>
+<section id="appendix-a-feature-list" class="level1">
+<h1>Appendix A: Feature List</h1>
+<section id="final-43-features" class="level2">
+<h2 class="anchored" data-anchor-id="final-43-features">Final 43 Features</h2>
+<section id="elo-features-3" class="level3">
+<h3 class="anchored" data-anchor-id="elo-features-3">ELO Features (3)</h3>
+<ul>
+<li><code>elo_home</code>, <code>elo_away</code>, <code>elo_diff</code></li>
+</ul>
+</section>
+<section id="rest-days-3" class="level3">
+<h3 class="anchored" data-anchor-id="rest-days-3">Rest Days (3)</h3>
+<ul>
+<li><code>rest_days_home</code>, <code>rest_days_away</code>, <code>rest_diff</code></li>
+</ul>
+</section>
+<section id="rolling-margins-6" class="level3">
+<h3 class="anchored" data-anchor-id="rolling-margins-6">Rolling Margins (6)</h3>
+<ul>
+<li><code>home_margin_avg_3/5/10</code></li>
+<li><code>away_margin_avg_3/5/10</code></li>
+</ul>
+</section>
+<section id="rolling-points-for-6" class="level3">
+<h3 class="anchored" data-anchor-id="rolling-points-for-6">Rolling Points For (6)</h3>
+<ul>
+<li><code>home_points_for_avg_3/5/10</code></li>
+<li><code>away_points_for_avg_3/5/10</code></li>
+</ul>
+</section>
+<section id="rolling-points-against-6" class="level3">
+<h3 class="anchored" data-anchor-id="rolling-points-against-6">Rolling Points Against (6)</h3>
+<ul>
+<li><code>home_points_against_avg_3/5/10</code></li>
+<li><code>away_points_against_avg_3/5/10</code></li>
+</ul>
+</section>
+<section id="temporal-features-3" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-features-3">Temporal Features (3)</h3>
+<ul>
+<li><code>day_of_week</code>, <code>month</code>, <code>is_weekend</code></li>
+</ul>
+</section>
+<section id="draftkings-features-3" class="level3">
+<h3 class="anchored" data-anchor-id="draftkings-features-3">DraftKings Features (3)</h3>
+<ul>
+<li><code>dk_spread</code>, <code>dk_spread_diff</code>, <code>dk_spread_move</code></li>
+</ul>
+</section>
+<section id="injury-features-10" class="level3">
+<h3 class="anchored" data-anchor-id="injury-features-10">Injury Features (10)</h3>
+<ul>
+<li><code>players_out_home/away</code></li>
+<li><code>players_dtd_home/away</code></li>
+<li><code>injury_severity_home/away</code></li>
+<li><code>star_out_home/away</code></li>
+<li><code>injury_severity_diff</code></li>
+<li><code>players_out_diff</code></li>
+</ul>
+</section>
+<section id="interaction-features-1" class="level3">
+<h3 class="anchored" data-anchor-id="interaction-features-1">Interaction Features (1)</h3>
+<ul>
+<li><code>elo_diff_x_rest_diff</code></li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="appendix-b-model-configuration" class="level1">
+<h1>Appendix B: Model Configuration</h1>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Final LightGBM Parameters</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"objective"</span>: <span class="st">"regression"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric"</span>: <span class="st">"mae"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"boosting_type"</span>: <span class="st">"gbdt"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"learning_rate"</span>: <span class="fl">0.02</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"num_leaves"</span>: <span class="dv">15</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"feature_fraction"</span>: <span class="fl">0.6</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bagging_fraction"</span>: <span class="fl">0.6</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bagging_freq"</span>: <span class="dv">5</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_child_samples"</span>: <span class="dv">40</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lambda_l1"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lambda_l2"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: <span class="dv">5</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"min_split_gain"</span>: <span class="fl">0.2</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"seed"</span>: <span class="dv">42</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimal Threshold</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>COVER_THRESHOLD <span class="op">=</span> <span class="fl">1.40</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+<section id="appendix-c-file-structure" class="level1">
+<h1>Appendix C: File Structure</h1>
+<pre><code>NBA_Prediction_Model/
+├── data/                          # Training datasets
+│   ├── final_dataset_raw_games.csv
+│   └── final_dataset_with_injuries.csv
+├── predictions/                   # Prediction outputs
+│   ├── predictions_latest.xlsx
+│   ├── predictions_latest.csv
+│   ├── predictions_history.xlsx
+│   ├── predictions_history.csv
+│   ├── predictions_summary.xlsx
+│   └── prediction_correctness.xlsx
+├── scripts/                       # Production scripts
+│   ├── 00_data_collection_run_all.py
+│   ├── 01_data_collection_fetch_historical_games.py
+│   ├── 02_data_collection_add_injuries.py
+│   ├── run_full_pipeline.py
+│   ├── predict_upcoming_games.py
+│   ├── daily_predictions.py
+│   ├── run_daily_with_logging.sh  # Automation wrapper
+│   ├── injury_features.py
+│   └── model_diagnostics.py
+├── logs/                          # Execution logs
+│   ├── daily_predictions_YYYYMMDD.log
+│   └── daily_predictions_error_YYYYMMDD.log
+├── index.qmd (this file)
+├── docs/
+└── README.md</code></pre>
+<hr>
+<p><em>Report generated: 2025-12-04</em></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

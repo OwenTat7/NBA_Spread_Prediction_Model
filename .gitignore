@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Data files (too large for git)
+data/*.csv
+data/*.xlsx
+data/.DS_Store
+!data/.gitkeep
+
+# Predictions (personal/private)
+predictions/
+*.xlsx
+*.csv
+!scripts/*.csv  # Keep script example CSVs if any
+!data/.gitkeep
+
+# Logs
+logs/
+*.log
+logs/*.txt
+
+# Models (if saved)
+models/
+*.pkl
+*.joblib
+*.h5
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Quarto
+index.html
+*.html
+_site/
+
+# Temporary files
+*.tmp
+*.temp
+nba_games_temp.csv
+
+# Launch agents (local config)
+*.plist
+
+# Environment variables
+.env
+.env.local
+
