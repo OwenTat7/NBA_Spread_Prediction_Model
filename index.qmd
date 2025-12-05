@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
     <strong>📦 View Project on GitHub</strong>
   </a>
   <br>
-  <small style="color: #586069;">Replace YOUR_USERNAME with your GitHub username</small>
+  <small style="color: #586069;">https://github.com/OwenTat7/NBA_Prediction_Model</small>
 </div>
 
 # Executive Summary
